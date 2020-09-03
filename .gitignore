@@ -1,0 +1,18 @@
+.idea
+node_modules
+
+# E2E Test Reports
+/reports/*
+/screenshots/*
+/azure-pipelines/jira/*
+/src/features/TM4J/*
+# exception to the rule
+!/**/.gitkeep
+
+# Ignore transient output test file, used to stitch together cucumber and testcafe
+/test.js
+
+# Compiled output
+lib
+
+.env

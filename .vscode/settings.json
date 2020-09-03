@@ -1,0 +1,12 @@
+{
+  "cucumberautocomplete.steps": ["src/step_definitions/*.ts", "src/step_definitions/**/*.ts"],
+  "cucumberautocomplete.syncfeatures": "src/features/*.feature",
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "spellright.language": [
+    "en"
+  ],
+  "spellright.documentTypes": [
+    "latex",
+    "plaintext"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "name": "typescript-bdd",
+  "version": "0.0.1",
+  "description": "Integration of TestCafe, Cucumberjs and TypeScript",
+  "scripts": {
+    "parse:features": "npx gherkin ./features/homepage.feature -f ndjson",
+    "parse:steps": "npx cucumber-steps-parser ./src/step_definitions/",
+    "dev": "echo Running testcafe in live mode.  To work on a test in livereload mode, tag it with @dev && npm run test -- --tags @dev -L",
+    "lint": "npx tslint -c ./tslint.json --project ./tsconfig.json",
+    "lint-fix": "npm run lint -- --fix",
+    "style": "npm run format && npm run lint-fix",
+    "test": "npm run test:fixture ./features/**/*.feature --",
+    "test:fixture": "npx gherkin-testcafe chrome -r list,json:reports/test.json,trx:reports/test.trx -S -s path=reports/screenshots,fullPage=true --skip-js-errors ./src/step_definitions/**/*.ts",
+    "clean:reports": "npx rimraf ./reports/screenshots && npx rimraf ./reports/*.xml",
+    "list-browsers": "npx gherkin-testcafe --list-browsers",
+    "test:local": "cross-env BASE_URL=http://localhost:3000 npx gherkin-testcafe chrome --reporter list,json:reports/local.json,trx:reports/local.trx --screenshots path=screenshots,fullPage=true --screenshots-on-fails --skip-js-errors --quarantine-mode ./src/step_definitions/**/*.ts ./features/**/*.feature --",
+    "test:ci": "npx gherkin-testcafe chrome:headless --reporter list,json:reports/ci.json,trx:reports/ci.trx --screenshots path=screenshots,fullPage=true --screenshots-on-fails --skip-js-errors --quarantine-mode ./src/step_definitions/**/*.ts ./features/**/*.feature --",
+    "test:slot": "npm run test:ci -- --tags ~@no-slots",
+    "test:smoke": "npm run test:ci -- --tags @smoke,~@dev",
+    "test:regression": "npm run test:ci -- --tags ~@dev"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.ts": [
+      "tslint --format codeFrame --fix",
+      "git add"
+    ],
+    "{src,e2e}/**/*.{js,ts,scss}": [
+      "git add"
+    ]
+  },
+  "dependencies": {
+    "@types/chai": "~4.2.2",
+    "@types/chai-string": "~1.4.2",
+    "@types/node": "~10.14.17",
+    "base64-img": "~1.0.4",
+    "chai": "~4.2.0",
+    "chai-string": "~1.5.0",
+    "crawler-request": "^1.2.2",
+    "cucumber": "~6.0.5",
+    "cucumber-html-reporter": "~5.0.2",
+    "cucumber-junit": "~1.7.1",
+    "cucumber-junit-convert": "~1.1.0",
+    "gherkin-testcafe": "^2.5.0",
+    "husky": "~3.0.9",
+    "lint-staged": "~9.5.0",
+    "pdf-parse": "^1.1.1",
+    "screenshot-desktop": "~1.10.0",
+    "testcafe": "~1.7.0",
+    "testcafe-reporter-html": "~1.4.5",
+    "testcafe-reporter-trx": "^1.0.0",
+    "testcafe-reporter-xunit": "^2.1.0",
+    "ts-node": "~8.5.4",
+    "tslint": "~5.20.0",
+    "tslint-config-standard": "~9.0.0",
+    "typescript": "~3.5.3"
+  },
+  "devDependencies": {
+    "cli-progress": "^3.8.0",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.0"
+  }
+}

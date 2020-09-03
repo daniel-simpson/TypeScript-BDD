@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "declarationDir": "./lib",
+    "inlineSourceMap": true,
+    "lib": ["dom", "es2017"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noResolve": false,
+    "outDir": "./lib",
+    "strict": true,
+    "target": "esnext",
+    "types": ["node", "testcafe", "chai-string"]
+  },
+  "exclude": [
+    "lib/*",
+    "lib/**/*",
+    "commitlint.config.js",
+    "cucumber-*.config.js"
+  ]
+}

@@ -1,0 +1,40 @@
+trigger:
+  branches:
+    include:
+      - master
+      - develop
+      - release/*
+      - feature/*
+
+parameters:
+  - name: BASE_URL
+    displayName: Website BASE URL (no trailing slash)
+    type: string
+  - name: IS_SLOT
+    displayName: Are you testing a Slot (not the main App Service)?
+    type: boolean
+    default: false
+
+stages:
+  - stage: Smoke
+    jobs:
+      - job: Smoke_Tests
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: gherkin-testcafe-template.yml
+            parameters:
+              Tags: "@smoke"
+
+  - stage: Regression
+    jobs:
+      - job: Regression_Tests
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: gherkin-testcafe-template.yml
+            parameters:
+              ${{ if eq(parameters.IS_SLOT, true) }}:
+                Tags: "~@smoke,~@no-slots"
+              ${{ if eq(parameters.IS_SLOT, false) }}:
+                Tags: "~@smoke,~@no-slots"

@@ -1,0 +1,44 @@
+parameters:
+  # Default parameter values for smoke test only
+  Tags: "@smoke,~@dev"
+
+steps:
+  - task: Npm@1
+    displayName: "Install packages"
+    inputs:
+      command: "install"
+
+  - task: Npm@1
+    displayName: "Clean Test Reports directory"
+    inputs:
+      command: "custom"
+      customCommand: "run clean:reports"
+
+  - task: Npm@1
+    displayName: "Display browsers"
+    inputs:
+      command: "custom"
+      customCommand: "run list-browsers"
+
+  - task: Npm@1
+    displayName: "Run Cucumber Tests"
+    inputs:
+      command: "custom"
+      customCommand: 'run test:ci -- --reporter list,trx:$(System.DefaultWorkingDirectory)\reports\ci.trx --tags ${{ parameters.Tags }}'
+
+  - task: PowerShell@2
+    displayName: Format test report
+    condition: always()
+    inputs:
+      targetType: filePath
+      filePath: $(System.DefaultWorkingDirectory)\azure-pipelines\ConvertTo-AzDevOpsTrx.ps1
+      arguments: -trxReportPath $(System.DefaultWorkingDirectory)\reports\ci.trx
+
+  - task: PublishTestResults@2
+    displayName: "Publish Test Results"
+    condition: always()
+    inputs:
+      testResultsFormat: "VSTest"
+      testResultsFiles: $(System.DefaultWorkingDirectory)\reports\ci.trx
+      mergeTestResults: true
+      publishRunAttachments: true
